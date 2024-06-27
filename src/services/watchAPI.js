@@ -75,6 +75,52 @@ export const watchApi = createApi({
         body: passwordData,
       }),
     }),
+    addBrand: builder.mutation({
+      query: (values) => ({
+        url: `brands/add`,
+        method: "POST",
+        body: { brandName: values },
+      }),
+      invalidatesTags: [{ type: "WatchList", id: "LIST" }],
+    }),
+    updateBrand: builder.mutation({
+      query: ({ id, brandName }) => ({
+        url: `brands/update/${id}`,
+        method: "PUT",
+        body: { brandName },
+      }),
+      invalidatesTags: [{ type: "Brand", id: "LIST" }],
+    }),
+    deleteBrand: builder.mutation({
+      query: (id) => ({
+        url: `brands/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Brand", id: "LIST" }],
+    }),
+    addWatch: builder.mutation({
+      query: (body) => ({
+        url: `watches/add`,
+        method: "POST",
+        body: body,
+      }),
+      invalidatesTags: [{ type: "WatchList", id: "LIST" }],
+    }),
+    updateWatch: builder.mutation({
+      query: ({ id, values }) => ({
+        url: `watches/update/${id}`,
+        method: "PUT",
+        body: values,
+      }),
+      invalidatesTags: [{ type: "Watch", id: "LIST" }],
+    }),
+    deleteWatch: builder.mutation({
+      query: (id) => ({
+        url: `watches/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Watch", id: "LIST" }],
+    }),
   }),
 });
 
@@ -86,4 +132,10 @@ export const {
   useGetMemberByIdQuery,
   useUpdateInfoMutation,
   useUpdatePasswordMutation,
+  useAddBrandMutation,
+  useUpdateBrandMutation,
+  useDeleteBrandMutation,
+  useAddWatchMutation,
+  useUpdateWatchMutation,
+  useDeleteWatchMutation,
 } = watchApi;
