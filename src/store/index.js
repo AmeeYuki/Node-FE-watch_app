@@ -1,10 +1,15 @@
-import { flowerApi } from "../services/flowerApi";
 import { combineReducers } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
-// ...import { persistStore, persistReducer } from 'redux-persist';
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // Sử dụng localStorage
-import flowerReducer from "../slices/flower.slice";
+
+import watchReducer from "../slices/watch.slice";
+import authReducer from "../slices/auth.slice";
+
+//API
+import { watchApi } from "../services/watchAPI";
+import { authApi } from "../services/authAPI";
+
 const persistConfig = {
   key: "root",
   storage,
@@ -14,15 +19,23 @@ const staticReducers = {
   theme: "theme",
 };
 
-const persistedReducer = persistReducer(persistConfig, flowerReducer);
+const persistedAuthReducer = persistReducer(persistConfig, authReducer); //user them API test
 
 export const store = configureStore({
   reducer: {
-    [flowerApi.reducerPath]: flowerApi.reducer,
-    flower: persistedReducer,
+    // [flowerApi.reducerPath]: flowerApi.reducer,
+    [authApi.reducerPath]: authApi.reducer,
+    [watchApi.reducerPath]: watchApi.reducer,
+
+    auth: persistedAuthReducer,
+    watch: watchReducer,
+    // user: persistedUserReducer,
   },
+
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(flowerApi.middleware),
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(authApi.middleware, watchApi.middleware), //user them API test
 });
 
 // Add a dictionary to keep track of the registered async reducers

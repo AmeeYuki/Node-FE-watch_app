@@ -3,3 +3,41 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+.home-page {
+  padding: 10px 20px;
+  width: 100%;
+  padding-bottom: 50px;
+}
+.home-page .header .title p {
+  font-size: 36px;
+  letter-spacing: 5px;
+  font-weight: 100;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-bottom: 5px;
+}
+.home-page .header .action {
+  padding: 0 10px;
+}
+.home-page .body {
+  margin-top: 10px;
+  padding: 0 20px;
+}
+.d-flex {
+  display: flex;
+  justify-content: center;
+}
+
+.profile-page {
+  padding: 5px 60px;
+}
+
+.profile-page .information {
+  border: 1px solid #333333a2;
+  width: 800px;
+  padding: 20px;
+  margin: 10px auto;
+}
+.profile-page .information p {
+  font-size: 20px;
+}

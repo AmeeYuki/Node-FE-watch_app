@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react"; // Import React if not alrea
 
 // Import the image file
 import "./Login.css";
-import { Alert, Button, Form, Input, notification } from "antd";
+import { Alert, Button, DatePicker, Form, Input, notification } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useLoginUserMutation } from "../../services/authAPI";
+import { useRegisterUserMutation } from "../../services/authAPI";
 import { selectToken, setAuth, setToken } from "../../slices/auth.slice";
+import dayjs from "dayjs";
 
 function Login() {
   const [form] = Form.useForm(); // Sử dụng hook Form của Ant Design
@@ -15,39 +16,42 @@ function Login() {
   const navigate = useNavigate();
   const token = useSelector(selectToken);
 
-  const [loginUser, { isLoading }] = useLoginUserMutation();
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
 
   const handleSubmit = async (values) => {
-    try {
-      const result = await loginUser({
-        memberName: values.username,
-        password: values.password,
-      });
+    const formattedYob = values.yob.format("YYYY");
 
-      if (result.data && result.data.token) {
-        dispatch(setAuth(result.data));
-        dispatch(setToken(result.data.token));
-        navigate("/");
-      } else {
-        notification.error({
-          message: "Login error",
-          description: "Invalid username or password. Try again!",
-        });
-        form.resetFields(); // Xóa dữ liệu trong các ô input
-      }
-    } catch (error) {
-      console.log(error);
-      setError("An error occurred while attempting to log in");
+    const result = await registerUser({
+      memberName: values.username,
+      password: values.password,
+      name: values.name,
+      yob: formattedYob,
+    });
+    // console.log(result);
+    if (result.data.status == 200) {
+      notification.success({
+        message: "Register successfully",
+        description: "Try to login!",
+      });
+      form.resetFields();
+      navigate("/login");
+    } else {
+      notification.error({
+        message: "Login error",
+        description: result.error.data,
+      });
+      form.resetFields(); // Xóa dữ liệu trong các ô input
     }
   };
+  const yearsFormat = "YYYY";
 
   return (
     <div className="login-page">
       <div className="img-background"></div>
 
-      <div className="login-space">
-        <h1 className="title"> Watch nè</h1>
-        <h3 className="sub-title">Hello, Let's Sign In</h3>
+      <div className="login-space" style={{ marginTop: 80 }}>
+        {/* <h1 className="title"> Watch nè</h1> */}
+        <h3 className="sub-title">Hello, Let's Sign up</h3>
         <Form form={form} className="login-form" onFinish={handleSubmit}>
           {/* <Form form={form} className="login-form"> */}
           {error && (
@@ -84,9 +88,29 @@ function Login() {
               className="form-input"
             />
           </Form.Item>
+          <p>Name</p>
+          <Form.Item
+            name="name"
+            rules={[{ required: true, message: "Please input your name!" }]}
+          >
+            <Input.Password placeholder="Enter name" className="form-input" />
+          </Form.Item>
+          <p>Year of birth</p>
+          <Form.Item
+            name="yob"
+            rules={[{ required: true, message: "Please input your name!" }]}
+          >
+            <DatePicker
+              style={{ width: "100%" }}
+              // defaultValue={dayjs("2015", yearsFormat)}
+              format={yearsFormat}
+              picker="year"
+            />
+          </Form.Item>
+
           <div className="forget-pass ">
             <p>
-              <Link to={"/register"}>Register</Link>
+              <Link to={"/login"}>Login</Link>
             </p>
           </div>
           <Form.Item>
@@ -96,7 +120,7 @@ function Login() {
               loading={isLoading}
               className="submit-btn"
             >
-              Sign in
+              Sign up
             </Button>
           </Form.Item>
         </Form>

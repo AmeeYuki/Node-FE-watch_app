@@ -1,10 +1,17 @@
-import { Navigate, Outlet } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { selectAuth, selectToken } from "../slices/auth.slice";
 
-const AuthGuard = ({ allowedRoles, children }) => {
-  // const user = useAppSelector((state) => state.user.user);
-  console.log("AuthGuard run");
+const AuthGuard = ({ allowedRoles }) => {
+  const token = useSelector(selectToken);
+  const auth = useSelector(selectAuth);
+  const location = useLocation();
 
-  // return user ? <Outlet /> || { children } : <Navigate to="/404" replace />;
+  if (allowedRoles && !allowedRoles.some((role) => auth.roles.includes(role))) {
+    return <Navigate to="/unauthorised" replace />;
+  }
+
   return <Outlet />;
 };
 

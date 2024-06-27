@@ -9,19 +9,19 @@ const useSider = () => {
   const siderList = useMemo(() => {
     return [
       {
+        label: "Home",
+        // icon: <FieldTimeOutlined />,
+        href: "",
+      },
+      {
         label: "Admin",
-        icon: <UserOutlined />,
+        // icon: <UserOutlined />,
         href: "admin",
       },
       {
         label: "Dashboard",
-        icon: <SolutionOutlined />,
+        // icon: <SolutionOutlined />,
         href: "/",
-      },
-      {
-        label: "Home",
-        icon: <FieldTimeOutlined />,
-        href: "home",
       },
     ];
   }, []);
